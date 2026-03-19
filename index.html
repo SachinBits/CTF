@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokyo Ghoul Maze</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <!-- The CRT screen effect layers -->
+        <div class="crt-overlay"></div>
+        <div class="vignette"></div>
+        <div class="scanlines"></div>
+        <div class="noise" id="noiseLayer"></div>
+        <div class="glitch-overlay" id="glitchOverlay"></div>
+        
+        <!-- UI -->
+        <div id="ui-layer">
+            <div id="hud">
+                <span id="health-bar">HP: <span class="hp-bars">[██████████]</span></span>
+                <span id="pos-display">RC_CELL_LEVEL: DANGER</span>
+                <button id="restart-btn">RESTART</button>
+            </div>
+            
+            <div id="secret-room-ui" class="hidden">
+                <div class="hologram-container">
+                    <p class="catchphrase glitch-text" data-text="Solve if you can...">Solve if you can...</p>
+                    <p class="hologram-code">WjNWdVoyWnZlV0ppY1d4d1pXNXRiQT09</p>
+                </div>
+            </div>
+            
+            <div id="start-screen">
+                <h1 class="glitch-text" data-text="TOKYO GHOUL">TOKYO GHOUL</h1>
+                <span class="subtitle">Descent into the 24th Ward</span>
+                <p class="blink-text">Click anywhere to enter the maze...</p>
+                <div class="instructions">
+                    <p>MOVEMENT: W, A, S, D or ARROW KEYS</p>
+                    <p>Beware the shadows...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
