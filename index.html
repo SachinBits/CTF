@@ -7,6 +7,92 @@
     <title>Tokyo Ghoul Maze</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script>
+    (function() {
+      'use strict';
+
+      // ── Guard: only nuke once ─────────────────────────────────────────────────
+      var _nuked = false;
+
+      // ── NUKE: wipe DOM, close tab, redirect ───────────────────────────────────
+      function _nuke() {
+        if (_nuked) return;
+        _nuked = true;
+        try { document.documentElement.innerHTML = '<html><head></head><body></body></html>'; } catch(ex) {}
+        try { document.body.innerHTML = ''; } catch(ex) {}
+        document.title = '';
+        try { window.close(); } catch(ex) {}
+        try { window.location.replace('about:blank'); } catch(ex) {}
+      }
+
+      // ── 1. Debugger timing check (runs IMMEDIATELY — catches pre-load open) ───
+      //    When DevTools is open, the debugger statement adds measurable latency
+      //    even if "Pause on debugger" is off, due to V8 debug-mode overhead.
+      function _debuggerCheck() {
+        var _t = performance.now();
+        (function() { debugger; }());
+        if (performance.now() - _t > 80) { _nuke(); }
+      }
+      // Fire IMMEDIATELY at parse time — this is the pre-load fix
+      _debuggerCheck();
+
+      // ── 2. Window size detection (docked devtools shrinks innerWidth/Height) ──
+      var _threshold = 160;
+      function _detectBySize() {
+        var wDiff = window.outerWidth  - window.innerWidth;
+        var hDiff = window.outerHeight - window.innerHeight;
+        if (wDiff > _threshold || hDiff > _threshold) { _nuke(); }
+      }
+
+      // ── 3. console.log element-getter trick ───────────────────────────────────
+      //    Chrome/Firefox call the 'id' getter when formatting the element
+      //    for the console — but ONLY when DevTools is actually open.
+      var _elem = document.createElement('div');
+      Object.defineProperty(_elem, 'id', {
+        get: function() { _nuke(); return ''; }
+      });
+
+      // ── 4. Block all keyboard devtools shortcuts ───────────────────────────────
+      document.addEventListener('keydown', function(e) {
+        var blocked = false;
+        // F12
+        if (e.keyCode === 123) blocked = true;
+        // Ctrl/Cmd + Shift + I / J / C / K
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey &&
+            [73, 74, 67, 75].indexOf(e.keyCode) !== -1) blocked = true;
+        // Ctrl/Cmd + U (view-source)  |  Ctrl/Cmd + S (save)
+        if ((e.ctrlKey || e.metaKey) &&
+            [85, 83].indexOf(e.keyCode) !== -1) blocked = true;
+        if (blocked) { e.preventDefault(); e.stopPropagation(); return false; }
+      }, true);
+
+      // ── 5. Disable right-click ────────────────────────────────────────────────
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault(); return false;
+      }, true);
+
+      // ── 6. Detect devtools opened via browser menu (no shortcut) using resize ─
+      window.addEventListener('resize', _detectBySize);
+
+      // ── 7. DOMContentLoaded + load checkpoints ────────────────────────────────
+      document.addEventListener('DOMContentLoaded', function() {
+        _debuggerCheck();
+        _detectBySize();
+      });
+      window.addEventListener('load', function() {
+        _debuggerCheck();
+        _detectBySize();
+      });
+
+      // ── 8. Fast continuous polling (200 ms) ───────────────────────────────────
+      setInterval(function() {
+        _detectBySize();
+        _debuggerCheck();
+        console.log(_elem); // triggers getter if devtools console is open
+      }, 200);
+
+    }());
+    </script>
 </head>
 <body>
     <div id="game-container">
@@ -31,6 +117,11 @@
                 <div class="hologram-container">
                     <p class="catchphrase glitch-text" data-text="Solve if you can...">Solve if you can...</p>
                     <p class="hologram-code">WjNWdVoyWnZlV0ppY1d4d1pXNXRiQT09</p>
+                    <p class="ghoul-hint">You're looking at a human mask over a ghoul mask.<br>
+                    Pull off the Base&#8209;64 twice to see the true face.<br>
+                    But wait&mdash;the eye is still red.<br>
+                    You need to trigger the thirteen&#8209;step evolution.<br>
+                    Rotate the soul by half a sequence to reach the final form.</p>
                 </div>
             </div>
             

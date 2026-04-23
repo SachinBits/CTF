@@ -271,6 +271,29 @@ h1 {
     letter-spacing: 2px;
 }
 
+/* Hint text beneath the encoded code */
+.ghoul-hint {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(180, 0, 0, 0.28);
+    font-size: 10.5px;
+    color: rgba(190, 45, 45, 0.75);
+    line-height: 2.1;
+    letter-spacing: 1px;
+    text-align: left;
+    max-width: 520px;
+    font-style: italic;
+    text-shadow: 0 0 6px rgba(255, 0, 0, 0.22);
+    animation: hintFadeIn 2.8s ease-in forwards;
+    opacity: 0;
+}
+
+@keyframes hintFadeIn {
+    0%   { opacity: 0; filter: blur(4px); }
+    50%  { opacity: 0.25; filter: blur(2px); }
+    100% { opacity: 1;  filter: blur(0px); }
+}
+
 /* Glitch Text Effect */
 .glitch-text {
     position: relative;
